@@ -24,6 +24,12 @@ const COMPLAINT_STATUS = {
   CLOSED: 'closed',
 };
 
+const LEAVE_STATUS = {
+  PENDING: 'pending',
+  APPROVED: 'approved',
+  REJECTED: 'rejected',
+};
+
 const AUDIT_EVENTS = {
   LOGIN: 'login',
   LOGOUT: 'logout',
@@ -33,6 +39,7 @@ const AUDIT_EVENTS = {
 };
 
 module.exports = {
+  LEAVE_STATUS,
   ROLES,
   ROOM_STATUS,
   FEE_STATUS,

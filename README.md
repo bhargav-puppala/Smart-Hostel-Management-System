@@ -24,11 +24,14 @@
 - **Complaints** — Students submit; admin/warden resolve (with photo support)
 - **Announcements** — Notices from admin/warden (pinnable, hostel-specific)
 - **Users** — Admin manages users; warden registration requires admin approval
+- **Leave / Outpass** — Students request leave; admin/warden approve; generates outpass code
+- **Visitor Log** — Track visitors (check-in/out), who visits whom; students can log expected visitors
 
 ### Additional Features
 - **Reports** — Analytics dashboard (hostels, rooms, students, occupancy, revenue, fees, complaints)
 - **Settings** — Profile update (name, avatar, password)
 - **Image Support** — Hostel images, user avatars, complaint photos (JPEG, PNG, GIF, WebP, max 5MB)
+- **Dark Mode** — Theme toggle (sun/moon) in header; preference saved in localStorage
 
 ## Project Structure
 
@@ -44,7 +47,7 @@ hostlr/
 ├── server/                 # Express backend
 │   ├── src/
 │   │   ├── config/         # DB, env
-│   │   ├── modules/        # auth, users, hostels, rooms, allotments, fees, complaints, announcements, stats, upload
+│   │   ├── modules/        # auth, users, hostels, rooms, allotments, fees, complaints, announcements, leaves, visitors, stats, upload
 │   │   └── shared/         # middleware, utils
 │   ├── scripts/
 │   │   └── seed-admin.js   # Seed admin user
@@ -136,6 +139,13 @@ Serve `client/dist` with your preferred static host. Point API base URL via `VIT
 | GET | `/allotments` | List allotments |
 | GET | `/fees` | List fees |
 | GET | `/complaints` | List complaints |
+| GET | `/leaves` | List leave requests |
+| POST | `/leaves` | Create leave (student) |
+| PATCH | `/leaves/:id/approve` | Approve leave (admin/warden) |
+| PATCH | `/leaves/:id/reject` | Reject leave (admin/warden) |
+| GET | `/visitors` | List visitor logs |
+| POST | `/visitors` | Log visitor |
+| PATCH | `/visitors/:id/checkout` | Check out visitor (admin/warden) |
 | GET | `/announcements` | List announcements |
 | GET | `/stats` | Analytics (admin/warden/accountant) |
 | POST | `/upload` | Upload image |

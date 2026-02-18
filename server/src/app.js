@@ -18,6 +18,8 @@ const allotmentRoutes = require('./modules/allotments/allotment.routes');
 const feeRoutes = require('./modules/fees/fee.routes');
 const complaintRoutes = require('./modules/complaints/complaint.routes');
 const announcementRoutes = require('./modules/announcements/announcement.routes');
+const leaveRoutes = require('./modules/leaves/leave.routes');
+const visitorRoutes = require('./modules/visitors/visitor.routes');
 
 const app = express();
 
@@ -55,6 +57,8 @@ app.use('/api/v1/allotments', allotmentRoutes);
 app.use('/api/v1/fees', feeRoutes);
 app.use('/api/v1/complaints', complaintRoutes);
 app.use('/api/v1/announcements', announcementRoutes);
+app.use('/api/v1/leaves', leaveRoutes);
+app.use('/api/v1/visitors', visitorRoutes);
 
 app.use((req, res) => {
   res.status(404).json({ success: false, message: 'Route not found' });

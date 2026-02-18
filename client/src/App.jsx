@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { ThemeProvider } from './context/ThemeContext';
 import AdminLayout from './components/Layout/AdminLayout';
 import WardenLayout from './components/Layout/WardenLayout';
 import StudentLayout from './components/Layout/StudentLayout';
@@ -16,6 +17,8 @@ import Allotments from './pages/Allotments';
 import Reports from './pages/Reports';
 import Settings from './pages/Settings';
 import Announcements from './pages/Announcements';
+import Leaves from './pages/Leaves';
+import Visitors from './pages/Visitors';
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
@@ -79,6 +82,8 @@ function AppRoutes() {
         <Route path="allotments" element={<Allotments />} />
         <Route path="fees" element={<Fees />} />
         <Route path="complaints" element={<Complaints />} />
+        <Route path="leaves" element={<Leaves />} />
+        <Route path="visitors" element={<Visitors />} />
         <Route path="reports" element={<Reports />} />
         <Route path="settings" element={<Settings />} />
       </Route>
@@ -101,6 +106,8 @@ function AppRoutes() {
         <Route path="allotments" element={<Allotments />} />
         <Route path="fees" element={<Fees />} />
         <Route path="complaints" element={<Complaints />} />
+        <Route path="leaves" element={<Leaves />} />
+        <Route path="visitors" element={<Visitors />} />
         <Route path="settings" element={<Settings />} />
       </Route>
 
@@ -119,6 +126,8 @@ function AppRoutes() {
         <Route path="announcements" element={<Announcements />} />
         <Route path="fees" element={<Fees />} />
         <Route path="complaints" element={<Complaints />} />
+        <Route path="leaves" element={<Leaves />} />
+        <Route path="visitors" element={<Visitors />} />
         <Route path="settings" element={<Settings />} />
       </Route>
 
@@ -145,9 +154,11 @@ function NavigateToRole() {
 export default function App() {
   return (
     <BrowserRouter>
-      <AuthProvider>
-        <AppRoutes />
-      </AuthProvider>
+      <ThemeProvider>
+        <AuthProvider>
+          <AppRoutes />
+        </AuthProvider>
+      </ThemeProvider>
     </BrowserRouter>
   );
 }

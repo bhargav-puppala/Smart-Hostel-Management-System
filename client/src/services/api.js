@@ -99,6 +99,21 @@ export const allotmentsApi = {
   end: (id) => api.patch(`/allotments/${id}/end`),
 };
 
+export const leavesApi = {
+  getAll: (params) => api.get('/leaves', { params }),
+  getOne: (id) => api.get(`/leaves/${id}`),
+  create: (data) => api.post('/leaves', data),
+  approve: (id) => api.patch(`/leaves/${id}/approve`),
+  reject: (id, data) => api.patch(`/leaves/${id}/reject`, data),
+};
+
+export const visitorsApi = {
+  getAll: (params) => api.get('/visitors', { params }),
+  getOne: (id) => api.get(`/visitors/${id}`),
+  create: (data) => api.post('/visitors', data),
+  checkout: (id) => api.patch(`/visitors/${id}/checkout`),
+};
+
 export const uploadApi = {
   upload: (file) => {
     const formData = new FormData();
