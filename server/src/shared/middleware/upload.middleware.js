@@ -8,7 +8,11 @@ if (!fs.existsSync(UPLOAD_DIR)) {
   fs.mkdirSync(UPLOAD_DIR, { recursive: true });
 }
 
-const storage = multer.diskStorage({
+// Memory storage for Cloudinary (buffer kept in req.file.buffer)
+const memoryStorage = multer.memoryStorage();
+
+// Disk storage fallback when Cloudinary is not configured
+const diskStorage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, UPLOAD_DIR),
   filename: (req, file, cb) => {
     const ext = path.extname(file.originalname) || '.jpg';
@@ -26,8 +30,10 @@ const fileFilter = (req, file, cb) => {
   }
 };
 
+const useCloudinary = !!(process.env.CLOUDINARY_CLOUD_NAME && process.env.CLOUDINARY_API_KEY && process.env.CLOUDINARY_API_SECRET);
+
 const upload = multer({
-  storage,
+  storage: useCloudinary ? memoryStorage : diskStorage,
   fileFilter,
   limits: { fileSize: 5 * 1024 * 1024 },
 });
@@ -35,4 +41,4 @@ const upload = multer({
 const uploadSingle = (field) => upload.single(field);
 const uploadMultiple = (field, maxCount = 5) => upload.array(field, maxCount);
 
-module.exports = { uploadSingle, uploadMultiple, UPLOAD_DIR };
+module.exports = { uploadSingle, uploadMultiple, UPLOAD_DIR, useCloudinary };

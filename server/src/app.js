@@ -21,11 +21,31 @@ const visitorRoutes = require('./modules/visitors/visitor.routes');
 
 const app = express();
 
-app.use(helmet());
+// Trust proxy when behind nginx, load balancer, etc.
+app.set('trust proxy', 1);
+
+// Helmet: allow cross-origin API requests from frontend
+app.use(
+  helmet({
+    crossOriginResourcePolicy: { policy: 'cross-origin' },
+    crossOriginEmbedderPolicy: false,
+  })
+);
+
+// CORS: flexible origin validation for deployment (handles trailing slash, multiple origins)
+const allowedOrigins = env.CORS_ORIGINS.map((o) => o.replace(/\/$/, ''));
 app.use(
   cors({
-    origin: env.CORS_ORIGIN.includes(',') ? env.CORS_ORIGIN.split(',').map((o) => o.trim()) : env.CORS_ORIGIN,
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true);
+      const normalized = origin.replace(/\/$/, '');
+      const allowed = allowedOrigins.some((a) => normalized === a || origin === a);
+      callback(null, allowed);
+    },
     credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
+    optionsSuccessStatus: 204,
   })
 );
 app.use(morgan(env.NODE_ENV === 'production' ? 'combined' : 'dev'));

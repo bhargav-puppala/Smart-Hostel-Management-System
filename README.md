@@ -125,6 +125,38 @@ npm run build
 
 Serve `client/dist` with your preferred static host. Point API base URL via `VITE_API_URL` at build time.
 
+## Deployment
+
+### Backend (Server)
+
+1. Set environment variables (see `server/.env.example`):
+   - `NODE_ENV=production`
+   - `MONGODB_URI` — MongoDB connection string (e.g. Atlas)
+   - `JWT_SECRET` — Strong random secret
+   - `CORS_ORIGIN` — Comma-separated list of your frontend URLs (e.g. `https://app.yourdomain.com`)
+   - Cloudinary credentials (optional, for image uploads)
+
+2. Run behind a reverse proxy (nginx, etc.) and enable `trust proxy` (already set).
+
+3. Start: `npm start` or use a process manager (PM2, systemd).
+
+### Frontend (Client)
+
+1. Create `client/.env` with your API URL **before** building:
+   ```env
+   VITE_API_URL=https://api.yourdomain.com/api/v1
+   ```
+
+2. Build: `npm run build`
+
+3. Serve `client/dist` with nginx, Vercel, Netlify, or any static host.
+
+### CORS
+
+- Add your frontend origin(s) to `CORS_ORIGIN` (no trailing slash).
+- Example: `CORS_ORIGIN=https://app.yourdomain.com,https://www.yourdomain.com`
+- Trailing slashes are normalized automatically.
+
 ## API Routes
 
 | Method | Route | Description |
