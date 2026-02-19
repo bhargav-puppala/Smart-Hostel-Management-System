@@ -10,7 +10,7 @@ export function AuthProvider({ children }) {
   useEffect(() => {
     const token = localStorage.getItem('accessToken');
     if (!token) {
-      setLoading(false);
+      queueMicrotask(() => setLoading(false));
       return;
     }
     authApi
@@ -34,6 +34,14 @@ export function AuthProvider({ children }) {
     return u;
   };
 
+  const setSession = (user, accessToken) => {
+    if (accessToken) localStorage.setItem('accessToken', accessToken);
+    if (user) {
+      localStorage.setItem('user', JSON.stringify(user));
+      setUser(user);
+    }
+  };
+
   const logout = () => {
     localStorage.removeItem('accessToken');
     localStorage.removeItem('user');
@@ -49,12 +57,13 @@ export function AuthProvider({ children }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, login, logout, refreshUser }}>
+    <AuthContext.Provider value={{ user, loading, login, setSession, logout, refreshUser }}>
       {children}
     </AuthContext.Provider>
   );
 }
 
+/* eslint-disable react-refresh/only-export-components */
 export function useAuth() {
   const ctx = useContext(AuthContext);
   if (!ctx) throw new Error('useAuth must be used within AuthProvider');

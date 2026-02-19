@@ -3,8 +3,6 @@ const path = require('path');
 const cors = require('cors');
 const helmet = require('helmet');
 const morgan = require('morgan');
-const rateLimit = require('express-rate-limit');
-
 const env = require('./config/env');
 const errorHandler = require('./shared/middleware/errorHandler.middleware');
 
@@ -34,12 +32,8 @@ app.use(morgan(env.NODE_ENV === 'production' ? 'combined' : 'dev'));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 100,
-  message: { success: false, message: 'Too many requests, please try again later.' },
-});
-app.use('/api', limiter);
+// No rate limiter on public routes (auth/register, auth/login, auth/refresh-token)
+// Private routes use user-ID-based rate limiting (see each router) since hostelers share the same public IP
 
 app.get('/health', (req, res) => {
   res.json({ success: true, message: 'Hostlr API is running' });

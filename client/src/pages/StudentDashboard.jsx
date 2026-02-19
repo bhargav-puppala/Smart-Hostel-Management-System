@@ -1,10 +1,8 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { feesApi, complaintsApi, allotmentsApi, leavesApi } from '../services/api';
-import { useAuth } from '../context/AuthContext';
 
 export default function StudentDashboard() {
-  const { user } = useAuth();
   const [fees, setFees] = useState([]);
   const [complaints, setComplaints] = useState([]);
   const [leaves, setLeaves] = useState([]);

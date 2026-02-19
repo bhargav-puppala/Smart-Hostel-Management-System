@@ -73,7 +73,7 @@ export default function Announcements() {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-xl font-bold text-slate-900">Announcements & Notices</h2>
+        <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100">Announcements & Notices</h2>
         {canManage && (
           <button
             onClick={() => {
@@ -94,14 +94,14 @@ export default function Announcements() {
             <div className="w-10 h-10 rounded-full border-2 border-emerald-500 border-t-transparent animate-spin" />
           </div>
         ) : announcements.length === 0 ? (
-          <div className="bg-white rounded-xl border border-gray-100 p-12 text-center text-gray-500">
+          <div className="bg-white dark:bg-slate-800 rounded-xl border border-gray-100 p-12 text-center text-gray-500">
             No announcements yet.
           </div>
         ) : (
           announcements.map((a) => (
             <div
               key={a._id}
-              className={`bg-white rounded-xl border shadow-sm p-5 ${a.isPinned ? 'border-amber-200 bg-amber-50/30' : 'border-gray-100'}`}
+              className={`bg-white dark:bg-slate-800 rounded-xl border shadow-sm p-5 ${a.isPinned ? 'border-amber-200 bg-amber-50/30' : 'border-gray-100'}`}
             >
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1 min-w-0">
@@ -134,15 +134,15 @@ export default function Announcements() {
 
       {showModal && canManage && (
         <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-lg shadow-2xl border border-slate-100">
-            <h3 className="text-xl font-bold text-slate-900 mb-6">{editing ? 'Edit Announcement' : 'Add Announcement'}</h3>
+          <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 w-full max-w-lg shadow-2xl border border-slate-100 dark:border-slate-700">
+            <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100 mb-6">{editing ? 'Edit Announcement' : 'Add Announcement'}</h3>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label className="block text-sm font-semibold text-slate-700 mb-2">Title</label>
                 <input
                   value={form.title}
                   onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-emerald-500"
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200 focus:border-emerald-500"
                   required
                 />
               </div>
@@ -151,7 +151,7 @@ export default function Announcements() {
                 <textarea
                   value={form.content}
                   onChange={(e) => setForm((f) => ({ ...f, content: e.target.value }))}
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-emerald-500"
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200 focus:border-emerald-500"
                   rows={4}
                   required
                 />
@@ -161,7 +161,7 @@ export default function Announcements() {
                 <select
                   value={form.hostelId}
                   onChange={(e) => setForm((f) => ({ ...f, hostelId: e.target.value }))}
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-emerald-500"
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200 focus:border-emerald-500"
                 >
                   <option value="">All hostels</option>
                   {hostels.map((h) => (
@@ -180,7 +180,7 @@ export default function Announcements() {
                 <label htmlFor="isPinned" className="text-sm font-medium text-slate-700">Pin to top</label>
               </div>
               <div className="flex gap-3 pt-4">
-                <button type="button" onClick={() => setShowModal(false)} className="flex-1 py-3 rounded-xl border border-slate-200 hover:bg-slate-50 font-semibold text-slate-700">
+                <button type="button" onClick={() => setShowModal(false)} className="flex-1 py-3 rounded-xl border border-slate-200 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700 font-semibold text-slate-700 dark:text-slate-300">
                   Cancel
                 </button>
                 <button type="submit" className="flex-1 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-semibold">

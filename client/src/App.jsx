@@ -1,11 +1,14 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { AuthProvider, useAuth } from './context/AuthContext';
 import { ThemeProvider } from './context/ThemeContext';
+import ErrorBoundary from './components/ErrorBoundary';
 import AdminLayout from './components/Layout/AdminLayout';
 import WardenLayout from './components/Layout/WardenLayout';
 import StudentLayout from './components/Layout/StudentLayout';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import Landing from './pages/Landing';
+import PendingWardenDashboard from './pages/PendingWardenDashboard';
 import Dashboard from './pages/Dashboard';
 import StudentDashboard from './pages/StudentDashboard';
 import Hostels from './pages/Hostels';
@@ -24,7 +27,7 @@ function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-slate-900">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-emerald-500" />
       </div>
     );
@@ -33,11 +36,11 @@ function ProtectedRoute({ children }) {
   return children;
 }
 
-function RoleRoute({ allowedRoles, children, fallbackPath }) {
+function RoleRoute({ allowedRoles, children }) {
   const { user, loading } = useAuth();
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-slate-900">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-emerald-500" />
       </div>
     );
@@ -48,6 +51,13 @@ function RoleRoute({ allowedRoles, children, fallbackPath }) {
     return <Navigate to={redirect} replace />;
   }
   return children;
+}
+
+function WardenOrPending() {
+  const { user } = useAuth();
+  const isPendingWarden = user?.role === 'warden' && user?.approvalStatus === 'pending';
+  if (isPendingWarden) return <PendingWardenDashboard />;
+  return <WardenLayout />;
 }
 
 function getDefaultPath(role) {
@@ -88,13 +98,13 @@ function AppRoutes() {
         <Route path="settings" element={<Settings />} />
       </Route>
 
-      {/* Warden panel */}
+      {/* Warden panel: pending wardens see sample dashboard, approved see full panel */}
       <Route
         path="/warden"
         element={
           <ProtectedRoute>
-            <RoleRoute allowedRoles={['warden', 'accountant']} fallbackPath="/admin">
-              <WardenLayout />
+            <RoleRoute allowedRoles={['warden', 'accountant']}>
+              <WardenOrPending />
             </RoleRoute>
           </ProtectedRoute>
         }
@@ -131,34 +141,49 @@ function AppRoutes() {
         <Route path="settings" element={<Settings />} />
       </Route>
 
-      {/* Root redirect */}
-      <Route path="/" element={<NavigateToRole />} />
+      {/* Root: Landing for guests, redirect to dashboard for logged-in users */}
+      <Route path="/" element={<RootRoute />} />
       <Route path="*" element={<NavigateToRole />} />
     </Routes>
   );
+}
+
+function RootRoute() {
+  const { user, loading } = useAuth();
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-slate-900">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-emerald-500" />
+      </div>
+    );
+  }
+  if (user) return <Navigate to={getDefaultPath(user.role)} replace />;
+  return <Landing />;
 }
 
 function NavigateToRole() {
   const { user, loading } = useAuth();
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-slate-900">
         <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-emerald-500" />
       </div>
     );
   }
-  if (!user) return <Navigate to="/login" replace />;
+  if (!user) return <Navigate to="/" replace />;
   return <Navigate to={getDefaultPath(user.role)} replace />;
 }
 
 export default function App() {
   return (
-    <BrowserRouter>
-      <ThemeProvider>
-        <AuthProvider>
-          <AppRoutes />
-        </AuthProvider>
-      </ThemeProvider>
-    </BrowserRouter>
+    <ErrorBoundary>
+      <BrowserRouter>
+        <ThemeProvider>
+          <AuthProvider>
+            <AppRoutes />
+          </AuthProvider>
+        </ThemeProvider>
+      </BrowserRouter>
+    </ErrorBoundary>
   );
 }

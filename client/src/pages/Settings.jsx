@@ -57,13 +57,13 @@ export default function Settings() {
 
   return (
     <div className="max-w-xl">
-      <div className="bg-white rounded-xl shadow-sm border border-gray-100 p-6">
-        <h2 className="text-xl font-bold text-gray-900 mb-6">Profile Settings</h2>
+      <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 p-6">
+        <h2 className="text-xl font-bold text-gray-900 dark:text-slate-100 mb-6">Profile Settings</h2>
 
         {message && (
           <div
             className={`mb-4 p-3 rounded-lg text-sm ${
-              message.type === 'success' ? 'bg-emerald-50 text-emerald-700' : 'bg-red-50 text-red-700'
+              message.type === 'success' ? 'bg-emerald-50 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300' : 'bg-red-50 dark:bg-red-900/30 text-red-700 dark:text-red-300'
             }`}
           >
             {message.text}
@@ -72,7 +72,7 @@ export default function Settings() {
 
         <form onSubmit={handleSubmit} className="space-y-5">
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">Profile Photo</label>
+            <label className="block text-sm font-semibold text-gray-700 dark:text-slate-300 mb-2">Profile Photo</label>
             <div className="flex items-center gap-3">
               {form.avatarUrl ? (
                 <div className="relative">
@@ -86,47 +86,47 @@ export default function Settings() {
                   </button>
                 </div>
               ) : (
-                <label className="w-20 h-20 rounded-full border-2 border-dashed border-gray-300 flex items-center justify-center cursor-pointer hover:border-emerald-500">
+                <label className="w-20 h-20 rounded-full border-2 border-dashed border-gray-300 dark:border-slate-600 flex items-center justify-center cursor-pointer hover:border-emerald-500 text-gray-500 dark:text-slate-400">
                   <input type="file" accept="image/*" onChange={handleAvatarChange} className="hidden" disabled={uploading} />
-                  {uploading ? '...' : <span className="text-2xl text-gray-400">+</span>}
+                  {uploading ? '...' : <span className="text-2xl text-gray-400 dark:text-slate-500">+</span>}
                 </label>
               )}
-              <span className="text-sm text-gray-500">JPEG, PNG, GIF. Max 5MB</span>
+              <span className="text-sm text-gray-500 dark:text-slate-400">JPEG, PNG, GIF. Max 5MB</span>
             </div>
           </div>
 
           <div>
-            <label className="block text-sm font-semibold text-gray-700 mb-2">Name</label>
+            <label className="block text-sm font-semibold text-gray-700 dark:text-slate-300 mb-2">Name</label>
             <input
               value={form.name}
               onChange={(e) => setForm((f) => ({ ...f, name: e.target.value }))}
-              className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-emerald-500"
+              className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200 focus:border-emerald-500"
               required
             />
           </div>
 
           <div>
-            <label className="block text-sm text-gray-500 mb-1">Email</label>
-            <input value={user?.email} className="w-full px-4 py-3 rounded-xl border border-gray-200 bg-gray-50" disabled />
-            <p className="text-xs text-gray-500 mt-1">Email cannot be changed</p>
+            <label className="block text-sm text-gray-500 dark:text-slate-400 mb-1">Email</label>
+            <input value={user?.email} className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-slate-600 bg-gray-50 dark:bg-slate-700 dark:text-slate-200" disabled />
+            <p className="text-xs text-gray-500 dark:text-slate-400 mt-1">Email cannot be changed</p>
           </div>
 
-          <div className="border-t border-gray-100 pt-5">
-            <h3 className="text-sm font-semibold text-gray-700 mb-3">Change Password</h3>
+          <div className="border-t border-gray-100 dark:border-slate-700 pt-5">
+            <h3 className="text-sm font-semibold text-gray-700 dark:text-slate-300 mb-3">Change Password</h3>
             <div className="space-y-3">
               <input
                 type="password"
                 placeholder="New password (leave blank to keep current)"
                 value={form.password}
                 onChange={(e) => setForm((f) => ({ ...f, password: e.target.value }))}
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-emerald-500"
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200 focus:border-emerald-500"
               />
               <input
                 type="password"
                 placeholder="Confirm new password"
                 value={form.confirmPassword}
                 onChange={(e) => setForm((f) => ({ ...f, confirmPassword: e.target.value }))}
-                className="w-full px-4 py-3 rounded-xl border border-gray-200 focus:border-emerald-500"
+                className="w-full px-4 py-3 rounded-xl border border-gray-200 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200 focus:border-emerald-500"
               />
             </div>
           </div>

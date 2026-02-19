@@ -63,7 +63,7 @@ export default function Fees() {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-xl font-bold text-slate-900">{user?.role === 'student' ? 'My Fees' : 'Fees'}</h2>
+        <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100">{user?.role === 'student' ? 'My Fees' : 'Fees'}</h2>
         {canCreate && (
           <button
             onClick={() => {
@@ -77,28 +77,28 @@ export default function Fees() {
         )}
       </div>
 
-      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+      <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm overflow-hidden">
         {loading ? (
           <div className="flex justify-center py-16">
             <div className="w-10 h-10 rounded-xl border-2 border-emerald-500 border-t-transparent animate-spin" />
           </div>
         ) : (
           <table className="w-full">
-            <thead className="bg-slate-50/80 border-b border-slate-100">
+            <thead className="bg-slate-50/80 border-b border-slate-100 dark:border-slate-700">
               <tr>
-                <th className="text-left px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Student</th>
-                <th className="text-left px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Amount</th>
-                <th className="text-left px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Due Date</th>
-                <th className="text-left px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Status</th>
-                <th className="text-right px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Actions</th>
+                <th className="text-left px-6 py-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Student</th>
+                <th className="text-left px-6 py-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Amount</th>
+                <th className="text-left px-6 py-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Due Date</th>
+                <th className="text-left px-6 py-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Status</th>
+                <th className="text-right px-6 py-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-slate-50">
               {fees.map((f) => (
                 <tr key={f._id} className="hover:bg-slate-50/50 transition-colors">
-                  <td className="px-6 py-4 text-slate-900">{f.studentId?.name || '-'}</td>
+                  <td className="px-6 py-4 text-slate-900 dark:text-slate-100">{f.studentId?.name || '-'}</td>
                   <td className="px-6 py-4 font-medium">₹{f.amount}</td>
-                  <td className="px-6 py-4 text-slate-600">
+                  <td className="px-6 py-4 text-slate-600 dark:text-slate-400">
                     {f.dueDate ? new Date(f.dueDate).toLocaleDateString() : '-'}
                   </td>
                   <td className="px-6 py-4">
@@ -126,7 +126,7 @@ export default function Fees() {
           </table>
         )}
         {totalPages > 1 && (
-          <div className="flex justify-center gap-2 py-3 border-t border-slate-100 bg-slate-50/50">
+          <div className="flex justify-center gap-2 py-3 border-t border-slate-100 dark:border-slate-700 bg-slate-50/50">
             <button
               disabled={page <= 1}
               onClick={() => setPage((p) => p - 1)}
@@ -150,15 +150,15 @@ export default function Fees() {
 
       {showModal && (
         <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl border border-slate-100">
-            <h3 className="text-xl font-bold text-slate-900 mb-6">Add Fee</h3>
+          <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 w-full max-w-md shadow-2xl border border-slate-100 dark:border-slate-700">
+            <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100 mb-6">Add Fee</h3>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label className="block text-sm font-semibold text-slate-700 mb-2">Student</label>
                 <select
                   value={form.studentId}
                   onChange={(e) => setForm((f) => ({ ...f, studentId: e.target.value }))}
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-emerald-500"
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200 focus:border-emerald-500"
                   required
                 >
                   <option value="">Select student</option>
@@ -177,7 +177,7 @@ export default function Fees() {
                   step="0.01"
                   value={form.amount}
                   onChange={(e) => setForm((f) => ({ ...f, amount: e.target.value }))}
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-emerald-500"
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200 focus:border-emerald-500"
                   required
                 />
               </div>
@@ -187,7 +187,7 @@ export default function Fees() {
                   type="date"
                   value={form.dueDate}
                   onChange={(e) => setForm((f) => ({ ...f, dueDate: e.target.value }))}
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-emerald-500"
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200 focus:border-emerald-500"
                 />
               </div>
               <div>
@@ -195,14 +195,14 @@ export default function Fees() {
                 <input
                   value={form.description}
                   onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-emerald-500"
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200 focus:border-emerald-500"
                 />
               </div>
               <div className="flex gap-3 pt-4">
                 <button
                   type="button"
                   onClick={() => setShowModal(false)}
-                  className="flex-1 py-3 rounded-xl border border-slate-200 hover:bg-slate-50 font-semibold text-slate-700"
+                  className="flex-1 py-3 rounded-xl border border-slate-200 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700 font-semibold text-slate-700 dark:text-slate-300"
                 >
                   Cancel
                 </button>

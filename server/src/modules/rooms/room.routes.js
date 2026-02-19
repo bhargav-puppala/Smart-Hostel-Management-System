@@ -2,11 +2,14 @@ const express = require('express');
 const router = express.Router();
 const roomController = require('./room.controller');
 const { authenticate } = require('../../shared/middleware/auth.middleware');
-const { authorizeRoles } = require('../../shared/middleware/role.middleware');
+const { authorizeRoles, authorizeApprovedWarden } = require('../../shared/middleware/role.middleware');
+const { privateRateLimiter } = require('../../shared/middleware/rateLimit.middleware');
 const { ROLES } = require('../../shared/constants');
 
 router.use(authenticate);
+router.use(privateRateLimiter);
 router.use(authorizeRoles(ROLES.ADMIN, ROLES.WARDEN, ROLES.STUDENT));
+router.use(authorizeApprovedWarden);
 
 router.get('/', roomController.getRooms);
 router.get('/:id', roomController.getRoom);

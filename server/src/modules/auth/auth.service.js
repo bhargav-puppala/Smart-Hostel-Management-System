@@ -30,7 +30,7 @@ const register = async (userData) => {
   const payload = { ...userData, role };
   if (role === 'warden') {
     payload.approvalStatus = 'pending';
-    payload.isActive = false;
+    payload.isActive = true; // Allow login to see pending dashboard; data routes require approval
   } else {
     payload.approvalStatus = 'approved';
   }
@@ -41,15 +41,18 @@ const register = async (userData) => {
 
   logger.info('User registered', { userId: user._id, email: user.email, role });
 
+  const { accessToken, refreshToken } = generateTokens(user._id);
+
   if (role === 'warden') {
     return {
       user: userObj,
-      message: 'Registration successful. Your account is pending admin approval. You will be notified once approved.',
+      accessToken,
+      refreshToken,
+      expiresIn: env.JWT_EXPIRES_IN,
+      message: 'Registration successful. Your account is pending admin approval. You can sign in and view a preview of your dashboard.',
       requiresApproval: true,
     };
   }
-
-  const { accessToken, refreshToken } = generateTokens(user._id);
   return {
     user: userObj,
     accessToken,
@@ -67,10 +70,6 @@ const login = async (email, password) => {
 
   if (!user.isActive) {
     throw ApiError.unauthorized('Account is deactivated');
-  }
-
-  if (user.role === 'warden' && user.approvalStatus === 'pending') {
-    throw ApiError.unauthorized('Your account is pending admin approval. Please wait for approval.');
   }
 
   if (user.role === 'warden' && user.approvalStatus === 'rejected') {

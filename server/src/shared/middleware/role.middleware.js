@@ -16,6 +16,18 @@ const authorizeRoles = (...allowedRoles) => {
   };
 };
 
+/** Blocks pending wardens from data routes. Allows admin, accountant, students, and approved wardens. */
+const authorizeApprovedWarden = (req, res, next) => {
+  if (!req.user) {
+    return next(ApiError.unauthorized('Authentication required.'));
+  }
+  const { role, approvalStatus } = req.user;
+  if (role === ROLES.WARDEN && approvalStatus !== 'approved') {
+    return next(ApiError.forbidden('Your account is pending admin approval. You will have full access once approved.'));
+  }
+  return next();
+};
+
 const isAdmin = authorizeRoles(ROLES.ADMIN);
 const isWarden = authorizeRoles(ROLES.ADMIN, ROLES.WARDEN);
 const isAccountant = authorizeRoles(ROLES.ADMIN, ROLES.ACCOUNTANT);
@@ -23,6 +35,7 @@ const isStudent = authorizeRoles(ROLES.STUDENT);
 
 module.exports = {
   authorizeRoles,
+  authorizeApprovedWarden,
   isAdmin,
   isWarden,
   isAccountant,

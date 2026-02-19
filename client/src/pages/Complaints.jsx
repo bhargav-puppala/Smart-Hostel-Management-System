@@ -76,7 +76,7 @@ export default function Complaints() {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-xl font-bold text-slate-900">Complaints</h2>
+        <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100">Complaints</h2>
         {user?.role === 'student' && (
           <button
             onClick={() => setShowModal(true)}
@@ -87,20 +87,20 @@ export default function Complaints() {
         )}
       </div>
 
-      <div className="bg-white rounded-2xl border border-slate-100 shadow-sm overflow-hidden">
+      <div className="bg-white dark:bg-slate-800 rounded-2xl border border-slate-100 dark:border-slate-700 shadow-sm overflow-hidden">
         {loading ? (
           <div className="flex justify-center py-16">
             <div className="w-10 h-10 rounded-xl border-2 border-emerald-500 border-t-transparent animate-spin" />
           </div>
         ) : (
           <table className="w-full">
-            <thead className="bg-slate-50/80 border-b border-slate-100">
+            <thead className="bg-slate-50/80 border-b border-slate-100 dark:border-slate-700">
               <tr>
-                <th className="text-left px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Title</th>
-                <th className="text-left px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Student</th>
-                <th className="text-left px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Status</th>
+                <th className="text-left px-6 py-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Title</th>
+                <th className="text-left px-6 py-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Student</th>
+                <th className="text-left px-6 py-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Status</th>
                 {canResolve && (
-                  <th className="text-right px-6 py-4 text-xs font-semibold text-slate-500 uppercase tracking-wider">Actions</th>
+                  <th className="text-right px-6 py-4 text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider">Actions</th>
                 )}
               </tr>
             </thead>
@@ -113,12 +113,12 @@ export default function Complaints() {
                         <img src={getImageUrl(c.imageUrls[0])} alt="" className="w-10 h-10 rounded-lg object-cover shrink-0" />
                       )}
                       <div>
-                        <p className="font-semibold text-slate-900">{c.title}</p>
-                        <p className="text-sm text-slate-500 line-clamp-1">{c.description}</p>
+                        <p className="font-semibold text-slate-900 dark:text-slate-100">{c.title}</p>
+                        <p className="text-sm text-slate-500 dark:text-slate-400 line-clamp-1">{c.description}</p>
                       </div>
                     </div>
                   </td>
-                  <td className="px-6 py-4 text-slate-600">{c.studentId?.name || '-'}</td>
+                  <td className="px-6 py-4 text-slate-600 dark:text-slate-400">{c.studentId?.name || '-'}</td>
                   <td className="px-6 py-4">
                     <span
                       className={`px-2 py-1 rounded-lg text-xs font-semibold ${
@@ -146,7 +146,7 @@ export default function Complaints() {
           </table>
         )}
         {totalPages > 1 && (
-          <div className="flex justify-center gap-2 py-3 border-t border-slate-100 bg-slate-50/50">
+          <div className="flex justify-center gap-2 py-3 border-t border-slate-100 dark:border-slate-700 bg-slate-50/50">
             <button
               disabled={page <= 1}
               onClick={() => setPage((p) => p - 1)}
@@ -170,15 +170,15 @@ export default function Complaints() {
 
       {showModal && (
         <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl border border-slate-100">
-            <h3 className="text-xl font-bold text-slate-900 mb-6">Add Complaint</h3>
+          <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 w-full max-w-md shadow-2xl border border-slate-100 dark:border-slate-700">
+            <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100 mb-6">Add Complaint</h3>
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label className="block text-sm font-semibold text-slate-700 mb-2">Title</label>
                 <input
                   value={form.title}
                   onChange={(e) => setForm((f) => ({ ...f, title: e.target.value }))}
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-emerald-500"
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200 focus:border-emerald-500"
                   required
                 />
               </div>
@@ -187,7 +187,7 @@ export default function Complaints() {
                 <textarea
                   value={form.description}
                   onChange={(e) => setForm((f) => ({ ...f, description: e.target.value }))}
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-emerald-500"
+                  className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200 focus:border-emerald-500"
                   rows={3}
                   required
                 />
@@ -210,7 +210,7 @@ export default function Complaints() {
                 </div>
               </div>
               <div className="flex gap-3 pt-4">
-                <button type="button" onClick={() => setShowModal(false)} className="flex-1 py-3 rounded-xl border border-slate-200 hover:bg-slate-50 font-semibold text-slate-700">Cancel</button>
+                <button type="button" onClick={() => setShowModal(false)} className="flex-1 py-3 rounded-xl border border-slate-200 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700 font-semibold text-slate-700 dark:text-slate-300">Cancel</button>
                 <button type="submit" className="flex-1 py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-semibold shadow-lg shadow-emerald-500/25">Submit</button>
               </div>
             </form>
@@ -220,15 +220,15 @@ export default function Complaints() {
 
       {resolveModal && (
         <div className="fixed inset-0 bg-slate-900/50 backdrop-blur-sm flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl p-6 w-full max-w-md shadow-2xl border border-slate-100">
-            <h3 className="text-xl font-bold text-slate-900 mb-6">Resolve: {resolveModal.title}</h3>
+          <div className="bg-white dark:bg-slate-800 rounded-2xl p-6 w-full max-w-md shadow-2xl border border-slate-100 dark:border-slate-700">
+            <h3 className="text-xl font-bold text-slate-900 dark:text-slate-100 mb-6">Resolve: {resolveModal.title}</h3>
             <form onSubmit={handleResolve} className="space-y-4">
               <div>
                 <label className="block text-sm font-semibold text-slate-700 mb-2">Resolution Notes</label>
-                <textarea value={resolutionNotes} onChange={(e) => setResolutionNotes(e.target.value)} className="w-full px-4 py-3 rounded-xl border border-slate-200 focus:border-emerald-500" rows={3} placeholder="Describe how the complaint was resolved..." />
+                <textarea value={resolutionNotes} onChange={(e) => setResolutionNotes(e.target.value)} className="w-full px-4 py-3 rounded-xl border border-slate-200 dark:border-slate-600 dark:bg-slate-700 dark:text-slate-200 focus:border-emerald-500" rows={3} placeholder="Describe how the complaint was resolved..." />
               </div>
               <div className="flex gap-3 pt-4">
-                <button type="button" onClick={() => { setResolveModal(null); setResolutionNotes(''); }} className="flex-1 py-3 rounded-xl border border-slate-200 hover:bg-slate-50 font-semibold text-slate-700">Cancel</button>
+                <button type="button" onClick={() => { setResolveModal(null); setResolutionNotes(''); }} className="flex-1 py-3 rounded-xl border border-slate-200 dark:border-slate-600 hover:bg-slate-50 dark:hover:bg-slate-700 font-semibold text-slate-700 dark:text-slate-300">Cancel</button>
                 <button type="submit" className="flex-1 py-3 rounded-xl bg-gradient-to-r from-emerald-500 to-teal-500 hover:from-emerald-600 hover:to-teal-600 text-white font-semibold shadow-lg shadow-emerald-500/25">Resolve</button>
               </div>
             </form>
