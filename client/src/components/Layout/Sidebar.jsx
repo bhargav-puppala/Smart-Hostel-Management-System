@@ -1,4 +1,5 @@
 import { NavLink } from 'react-router-dom';
+import Logo from '../ui/Logo';
 
 const icons = {
   dashboard: (
@@ -61,6 +62,7 @@ export default function Sidebar() {
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
           </svg>
         </button>
+        <Logo className="w-7 h-7 rounded shrink-0" />
         <span className="font-bold text-white text-lg">HOSTLR</span>
       </div>
 

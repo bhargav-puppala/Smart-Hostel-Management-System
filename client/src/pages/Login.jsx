@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useTheme } from '../context/ThemeContext';
+import Logo from '../components/ui/Logo';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -46,6 +47,7 @@ export default function Login() {
       </button>
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
+          <Logo className="w-14 h-14 rounded-lg mx-auto mb-3" />
           <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">HOSTLR</h1>
           <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">Hostel Management System</p>
         </div>

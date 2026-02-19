@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import { useTheme } from '../../context/ThemeContext';
 import { getImageUrl } from '../../services/api';
+import Logo from '../ui/Logo';
 
 export default function Header() {
   const { user, logout } = useAuth();
@@ -17,9 +18,7 @@ export default function Header() {
     <header className="sticky top-0 z-40 flex items-center justify-between h-14 px-6 bg-white dark:bg-slate-800 border-b border-gray-200 dark:border-slate-700">
       <div className="flex items-center gap-4">
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded bg-emerald-500 flex items-center justify-center text-white font-bold text-xs">
-            HL
-          </div>
+          <Logo className="w-8 h-8 rounded shrink-0" />
           <span className="font-semibold text-gray-900 dark:text-slate-100">{panelLabel} Panel</span>
         </div>
       </div>

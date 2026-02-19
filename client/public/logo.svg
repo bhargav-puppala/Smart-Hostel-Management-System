@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <defs>
+    <linearGradient id="hostlr-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#34d399"/>
+      <stop offset="100%" stop-color="#059669"/>
+    </linearGradient>
+  </defs>
+  <rect width="32" height="32" rx="7" fill="url(#hostlr-grad)"/>
+  <!-- Roof -->
+  <path fill="white" fill-opacity="0.95" d="M16 5l10 7H6l10-7z"/>
+  <!-- Building body -->
+  <path fill="white" fill-opacity="0.95" d="M8 14h4v10H8V14zm6 0h4v10h-4V14zm6 0h4v10h-4V14z"/>
+  <path fill="white" fill-opacity="0.9" d="M8 14V12l8-6 8 6v2H8z"/>
+</svg>

@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { authApi } from '../services/api';
 import { useTheme } from '../context/ThemeContext';
 import { useAuth } from '../context/AuthContext';
+import Logo from '../components/ui/Logo';
 
 export default function Register() {
   const [name, setName] = useState('');
@@ -59,6 +60,7 @@ export default function Register() {
       </button>
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
+          <Logo className="w-14 h-14 rounded-lg mx-auto mb-3" />
           <h1 className="text-2xl font-bold text-slate-800 dark:text-slate-100">HOSTLR</h1>
           <p className="text-slate-500 dark:text-slate-400 text-sm mt-1">Hostel Management System</p>
         </div>

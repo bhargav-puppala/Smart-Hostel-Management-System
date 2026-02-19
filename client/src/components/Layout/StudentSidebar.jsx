@@ -1,4 +1,5 @@
 import { NavLink } from 'react-router-dom';
+import Logo from '../ui/Logo';
 
 const icons = {
   dashboard: <div className="w-2.5 h-2.5 rounded-sm bg-emerald-500 shrink-0" />,
@@ -26,6 +27,7 @@ export default function StudentSidebar() {
   return (
     <aside className="w-[240px] min-h-screen flex flex-col shrink-0 bg-[#1e2329]">
       <div className="p-5 flex items-center gap-2">
+        <Logo className="w-7 h-7 rounded shrink-0" />
         <span className="font-bold text-white text-lg">HOSTLR</span>
         <span className="px-2 py-0.5 rounded text-[10px] font-medium bg-blue-500/30 text-blue-400">Student</span>
       </div>
