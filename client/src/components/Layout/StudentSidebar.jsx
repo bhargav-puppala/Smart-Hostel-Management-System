@@ -17,6 +17,7 @@ export default function StudentSidebar() {
   const items = [
     nav('/student', 'dashboard', 'Dashboard'),
     nav('/student/announcements', 'announcements', 'Notices'),
+    nav('/student/bookings', 'allotments', 'Bookings'),
     nav('/student/fees', 'fees', 'My Fees'),
     nav('/student/complaints', 'complaints', 'My Complaints'),
     nav('/student/leaves', 'leaves', 'Leave / Outpass'),

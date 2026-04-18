@@ -9,7 +9,7 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const { login } = useAuth();
+  const { login, isDemoMode } = useAuth();
   const { dark, toggleTheme } = useTheme();
   const navigate = useNavigate();
 
@@ -55,6 +55,12 @@ export default function Login() {
         <div className="bg-white dark:bg-slate-800 rounded-lg border border-slate-200 dark:border-slate-700 shadow-sm p-6">
           <h2 className="text-lg font-semibold text-slate-800 dark:text-slate-100 mb-6">Sign in</h2>
 
+          {isDemoMode && (
+            <div className="mb-4 p-3 rounded-md bg-emerald-50 dark:bg-emerald-900/30 border border-emerald-100 dark:border-emerald-800 text-emerald-700 dark:text-emerald-300 text-sm">
+              Demo mode is enabled. Use quick sign-in as Student or Admin.
+            </div>
+          )}
+
           <form onSubmit={handleSubmit} className="space-y-4">
             {error && (
               <div className="p-3 rounded-md bg-red-50 dark:bg-red-900/30 border border-red-100 dark:border-red-800 text-red-700 dark:text-red-300 text-sm">
@@ -90,6 +96,31 @@ export default function Login() {
             >
               {loading ? 'Signing in...' : 'Sign in'}
             </button>
+
+            {isDemoMode && (
+              <div className="grid grid-cols-2 gap-2">
+                <button
+                  type="button"
+                  onClick={() => {
+                    setEmail('bhargav@demo.com');
+                    setPassword('demo123');
+                  }}
+                  className="py-2 rounded-md border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-700"
+                >
+                  Use Student Demo
+                </button>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setEmail('admin@demo.com');
+                    setPassword('demo123');
+                  }}
+                  className="py-2 rounded-md border border-slate-300 dark:border-slate-600 text-slate-700 dark:text-slate-200 text-sm font-medium hover:bg-slate-50 dark:hover:bg-slate-700"
+                >
+                  Use Admin Demo
+                </button>
+              </div>
+            )}
           </form>
 
           <p className="text-center text-sm text-slate-500 dark:text-slate-400 mt-4">

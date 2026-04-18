@@ -1,5 +1,7 @@
 import { createContext, useContext, useState, useEffect } from 'react';
-import { authApi } from '../services/api';
+import { onAuthStateChanged } from 'firebase/auth';
+import { auth } from '../firebase/config';
+import { authApi, isDemoMode, signOutApiSession, switchDemoRoleSession } from '../services/api';
 
 const AuthContext = createContext(null);
 
@@ -8,56 +10,71 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    const token = localStorage.getItem('accessToken');
-    if (!token) {
-      queueMicrotask(() => setLoading(false));
-      return;
+    if (isDemoMode) {
+      authApi
+        .me()
+        .then((res) => setUser(res.data.data))
+        .catch(() => setUser(null))
+        .finally(() => setLoading(false));
+      return () => {};
     }
-    authApi
-      .me()
-      .then((res) => {
+
+    if (!auth) {
+      setUser(null);
+      setLoading(false);
+      return () => {};
+    }
+
+    const unsubscribe = onAuthStateChanged(auth, async (firebaseUser) => {
+      if (!firebaseUser) {
+        setUser(null);
+        setLoading(false);
+        return;
+      }
+      try {
+        const res = await authApi.me();
         setUser(res.data.data);
-      })
-      .catch(() => {
-        localStorage.removeItem('accessToken');
-        localStorage.removeItem('user');
-      })
-      .finally(() => setLoading(false));
+      } catch {
+        setUser(null);
+      } finally {
+        setLoading(false);
+      }
+    });
+
+    return () => unsubscribe();
   }, []);
 
   const login = async (email, password) => {
     const res = await authApi.login({ email, password });
-    const { user: u, accessToken } = res.data.data;
-    localStorage.setItem('accessToken', accessToken);
-    localStorage.setItem('user', JSON.stringify(u));
+    const { user: u } = res.data.data;
     setUser(u);
     return u;
   };
 
-  const setSession = (user, accessToken) => {
-    if (accessToken) localStorage.setItem('accessToken', accessToken);
-    if (user) {
-      localStorage.setItem('user', JSON.stringify(user));
-      setUser(user);
-    }
+  const setSession = (nextUser) => {
+    if (nextUser) setUser(nextUser);
   };
 
-  const logout = () => {
-    localStorage.removeItem('accessToken');
-    localStorage.removeItem('user');
+  const logout = async () => {
+    await signOutApiSession();
     setUser(null);
   };
 
   const refreshUser = async () => {
     const res = await authApi.me();
     const u = res.data.data;
-    localStorage.setItem('user', JSON.stringify(u));
     setUser(u);
     return u;
   };
 
+  const switchDemoRole = async (role) => {
+    if (!isDemoMode) return null;
+    switchDemoRoleSession(role);
+    return refreshUser();
+  };
+
   return (
-    <AuthContext.Provider value={{ user, loading, login, setSession, logout, refreshUser }}>
+    <AuthContext.Provider value={{ user, loading, login, setSession, logout, refreshUser, isDemoMode, switchDemoRole }}>
       {children}
     </AuthContext.Provider>
   );

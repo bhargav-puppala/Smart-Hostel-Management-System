@@ -6,7 +6,7 @@ import { getImageUrl } from '../../services/api';
 import Logo from '../ui/Logo';
 
 export default function Header() {
-  const { user, logout } = useAuth();
+  const { user, logout, isDemoMode, switchDemoRole } = useAuth();
   const { dark, toggleTheme } = useTheme();
   const navigate = useNavigate();
   const { pathname } = useLocation();
@@ -60,6 +60,24 @@ export default function Header() {
                   <p className="font-semibold text-gray-900 dark:text-slate-100 text-sm">{user?.name}</p>
                   <p className="text-xs text-gray-500 dark:text-slate-400">{user?.email}</p>
                 </div>
+                {isDemoMode && (
+                  <div className="px-4 py-2 border-b border-gray-100 dark:border-slate-700">
+                    <label className="block text-xs font-medium text-gray-500 dark:text-slate-400 mb-1">Demo role</label>
+                    <select
+                      value={user?.role === 'admin' ? 'admin' : 'student'}
+                      onChange={async (event) => {
+                        const nextRole = event.target.value;
+                        await switchDemoRole(nextRole);
+                        setShowMenu(false);
+                        navigate(nextRole === 'admin' ? '/admin' : '/student');
+                      }}
+                      className="w-full text-sm px-2 py-1 rounded border border-gray-300 dark:border-slate-600 bg-white dark:bg-slate-700 text-gray-700 dark:text-slate-200"
+                    >
+                      <option value="student">Student</option>
+                      <option value="admin">Admin</option>
+                    </select>
+                  </div>
+                )}
                 <button
                   type="button"
                   onClick={() => { logout(); setShowMenu(false); navigate('/login'); }}

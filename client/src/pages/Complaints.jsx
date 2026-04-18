@@ -13,6 +13,7 @@ export default function Complaints() {
   const [resolveModal, setResolveModal] = useState(null);
   const [resolutionNotes, setResolutionNotes] = useState('');
   const [uploading, setUploading] = useState(false);
+  const [successMessage, setSuccessMessage] = useState('');
 
   const load = async () => {
     setLoading(true);
@@ -50,6 +51,7 @@ export default function Complaints() {
     e.preventDefault();
     try {
       await complaintsApi.create(form);
+      setSuccessMessage('Complaint submitted successfully.');
       setShowModal(false);
       setForm({ title: '', description: '', imageUrls: [] });
       load();
@@ -63,6 +65,7 @@ export default function Complaints() {
     if (!resolveModal) return;
     try {
       await complaintsApi.resolve(resolveModal._id, { resolutionNotes });
+      setSuccessMessage('Complaint resolved successfully.');
       setResolveModal(null);
       setResolutionNotes('');
       load();
@@ -75,6 +78,15 @@ export default function Complaints() {
 
   return (
     <div className="space-y-6">
+      {successMessage && (
+        <div className="rounded-xl border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700">
+          <div className="flex items-center justify-between gap-3">
+            <span>{successMessage}</span>
+            <button type="button" onClick={() => setSuccessMessage('')} className="text-emerald-700/80 hover:text-emerald-900">Dismiss</button>
+          </div>
+        </div>
+      )}
+
       <div className="flex justify-between items-center">
         <h2 className="text-xl font-bold text-slate-900 dark:text-slate-100">Complaints</h2>
         {user?.role === 'student' && (

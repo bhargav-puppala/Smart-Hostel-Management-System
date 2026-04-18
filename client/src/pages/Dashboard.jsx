@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
-import { hostelsApi, roomsApi } from '../services/api';
+import { hostelsApi, roomsApi, statsApi } from '../services/api';
 
 const pillColors = [
   'bg-pink-100 dark:bg-pink-900/40 text-pink-700 dark:text-pink-300',
@@ -17,20 +17,38 @@ export default function Dashboard() {
   const [rooms, setRooms] = useState([]);
   const [hostels, setHostels] = useState([]);
   const [roomStats, setRoomStats] = useState({ available: 0, full: 0, maintenance: 0, total: 0 });
+  const [bookingStats, setBookingStats] = useState({ pendingBookings: 0, approvedBookings: 0, occupiedBookings: 0, pendingPayments: 0, paidPayments: 0 });
+  const [occupancyStats, setOccupancyStats] = useState({ totalBeds: 0, occupiedBeds: 0, vacantBeds: 0, occupancyRate: 0, highOccupancy: false });
   const [loading, setLoading] = useState(true);
   const [hostelFilter, setHostelFilter] = useState('');
 
   useEffect(() => {
     const load = async () => {
       try {
-        const [hRes, rRes] = await Promise.all([
+        const [hRes, rRes, sRes] = await Promise.all([
           hostelsApi.getAll({ limit: 100 }),
           roomsApi.getAll({ limit: 50 }),
+          statsApi.get(),
         ]);
         const hostelsData = hRes.data.data || [];
         const roomsData = rRes.data.data || [];
+        const statsData = sRes.data.data || {};
         setHostels(hostelsData);
         setRooms(roomsData);
+        setBookingStats({
+          pendingBookings: statsData.pendingBookings || 0,
+          approvedBookings: statsData.approvedBookings || 0,
+          occupiedBookings: statsData.occupiedBookings || 0,
+          pendingPayments: statsData.pendingPayments || 0,
+          paidPayments: statsData.paidPayments || 0,
+        });
+        setOccupancyStats({
+          totalBeds: statsData.totalBeds || 0,
+          occupiedBeds: statsData.occupiedBeds || 0,
+          vacantBeds: statsData.vacantBeds || 0,
+          occupancyRate: statsData.occupancyRate || 0,
+          highOccupancy: Boolean(statsData.highOccupancy),
+        });
 
         const available = roomsData.filter((x) => x.status === 'available').length;
         const full = roomsData.filter((x) => x.status === 'full').length;
@@ -73,6 +91,32 @@ export default function Dashboard() {
 
   return (
     <div className="space-y-6">
+      <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
+        <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 p-5">
+          <p className="text-sm text-gray-500 dark:text-slate-400">Total Beds</p>
+          <p className="text-xl font-bold text-gray-900 dark:text-slate-100 mt-1">{occupancyStats.totalBeds}</p>
+        </div>
+        <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 p-5">
+          <p className="text-sm text-gray-500 dark:text-slate-400">Occupied Beds</p>
+          <p className="text-xl font-bold text-gray-900 dark:text-slate-100 mt-1">{occupancyStats.occupiedBeds}</p>
+        </div>
+        <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 p-5">
+          <p className="text-sm text-gray-500 dark:text-slate-400">Vacant Beds</p>
+          <p className="text-xl font-bold text-gray-900 dark:text-slate-100 mt-1">{occupancyStats.vacantBeds}</p>
+        </div>
+        <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 p-5">
+          <div className="flex items-center justify-between gap-2">
+            <p className="text-sm text-gray-500 dark:text-slate-400">Occupancy</p>
+            {occupancyStats.highOccupancy && (
+              <span className="inline-flex items-center rounded-full bg-rose-100 px-2 py-0.5 text-xs font-semibold text-rose-700 dark:bg-rose-900/40 dark:text-rose-300">
+                High
+              </span>
+            )}
+          </div>
+          <p className="text-xl font-bold text-gray-900 dark:text-slate-100 mt-1">{occupancyStats.occupancyRate}%</p>
+        </div>
+      </div>
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Rooms - like Hiring */}
         <div className="lg:col-span-2 bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 overflow-hidden">
@@ -191,6 +235,29 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-5 gap-4">
+          <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 p-5">
+            <p className="text-sm text-gray-500 dark:text-slate-400">Pending Bookings</p>
+            <p className="text-xl font-bold text-gray-900 dark:text-slate-100 mt-1">{bookingStats.pendingBookings}</p>
+          </div>
+          <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 p-5">
+            <p className="text-sm text-gray-500 dark:text-slate-400">Approved Bookings</p>
+            <p className="text-xl font-bold text-gray-900 dark:text-slate-100 mt-1">{bookingStats.approvedBookings}</p>
+          </div>
+          <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 p-5">
+            <p className="text-sm text-gray-500 dark:text-slate-400">Occupied Beds</p>
+            <p className="text-xl font-bold text-gray-900 dark:text-slate-100 mt-1">{bookingStats.occupiedBookings}</p>
+          </div>
+          <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 p-5">
+            <p className="text-sm text-gray-500 dark:text-slate-400">Pending Payments</p>
+            <p className="text-xl font-bold text-gray-900 dark:text-slate-100 mt-1">{bookingStats.pendingPayments}</p>
+          </div>
+          <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 p-5">
+            <p className="text-sm text-gray-500 dark:text-slate-400">Paid Payments</p>
+            <p className="text-xl font-bold text-gray-900 dark:text-slate-100 mt-1">{bookingStats.paidPayments}</p>
+          </div>
+        </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         {/* My Task */}

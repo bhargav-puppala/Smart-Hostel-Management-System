@@ -1,197 +1,192 @@
 # HOSTLR
 
-**Hostel Management System** — A full-stack MERN application for managing hostels, rooms, allotments, fees, complaints, and announcements.
+Smart Hostel Management System built with React, with dual runtime modes:
 
-## Tech Stack
+- Demo Mode (default): no Firebase setup required, uses in-memory mock auth + mock data.
+- Production Mode: Firebase Auth + Firestore.
 
-- **Frontend:** React 19, Vite, Tailwind CSS, React Router
-- **Backend:** Node.js, Express, MongoDB (Mongoose)
-- **Auth:** JWT (access + refresh tokens), bcrypt
+## What Was Rebuilt
 
-## Features
+- Removed the old Node/Mongo/JWT backend and database logic.
+- Moved authentication to Firebase Authentication.
+- Moved data persistence to Firestore.
+- Implemented booking lifecycle with state transitions:
+   1. Student requests room + bed.
+   2. Admin/Warden approves or rejects request.
+   3. Student/Admin records payment.
+   4. Booking becomes occupied and creates active allotment.
+- Added bed-level availability checks to prevent double booking.
 
-### Role-Based Access
-- **Admin** — Full access: users, hostels, rooms, allotments, fees, complaints, announcements, reports, settings
-- **Warden** — Hostel operations: hostels, rooms, allotments, fees, complaints, announcements
-- **Accountant** — Fee management: create fees, mark as paid
-- **Student** — Personal view: my fees, my complaints, notices, profile settings
+## Stack
 
-### Core Modules
-- **Hostels** — CRUD with image support
-- **Rooms** — Room management per hostel (available, full, maintenance)
-- **Allotments** — Assign students to rooms
-- **Fees** — Create fees, track pending/paid/overdue
-- **Complaints** — Students submit; admin/warden resolve (with photo support)
-- **Announcements** — Notices from admin/warden (pinnable, hostel-specific)
-- **Users** — Admin manages users; warden registration requires admin approval
-- **Leave / Outpass** — Students request leave; admin/warden approve; generates outpass code
-- **Visitor Log** — Track visitors (check-in/out), who visits whom; students can log expected visitors
-
-### Additional Features
-- **Reports** — Analytics dashboard (hostels, rooms, students, occupancy, revenue, fees, complaints)
-- **Settings** — Profile update (name, avatar, password)
-- **Image Support** — Hostel images, user avatars, complaint photos (JPEG, PNG, GIF, WebP, max 5MB)
-- **Dark Mode** — Theme toggle (sun/moon) in header; preference saved in localStorage
+- React 19 + Vite + Tailwind CSS
+- Firebase Authentication (email/password)
+- Firestore (all application data)
 
 ## Project Structure
 
 ```
 hostlr/
-├── client/                 # React frontend
-│   ├── src/
-│   │   ├── components/     # Layout, UI components
-│   │   ├── context/        # AuthContext
-│   │   ├── pages/          # Route pages
-│   │   └── services/       # API client
-│   └── package.json
-├── server/                 # Express backend
-│   ├── src/
-│   │   ├── config/         # DB, env
-│   │   ├── modules/        # auth, users, hostels, rooms, allotments, fees, complaints, announcements, leaves, visitors, stats, upload
-│   │   └── shared/         # middleware, utils
-│   ├── scripts/
-│   │   └── seed-admin.js   # Seed admin user
-│   └── package.json
-└── README.md
+   client/
+      src/
+         components/
+         context/
+         firebase/
+         pages/
+         services/
+   flow.md
+   README.md
 ```
 
-## Getting Started
+## Runtime Modes
 
-### Prerequisites
-- Node.js 18+
-- MongoDB (local or Atlas)
+### Demo Mode (default)
 
-### 1. Clone & Install
+- Works fully without Firebase config.
+- Uses seeded demo data and mock authentication.
+- Supports end-to-end demo flow: Book -> Approve -> Pay -> Occupied, plus Complaint actions.
+- Optional role switching between Student/Admin is available from the user menu.
+
+### Production Mode (Firebase)
+
+Set `VITE_DEMO_MODE=false` and provide Firebase variables.
+
+## Required Firebase Setup (Production Mode)
+
+1. Create a Firebase project.
+2. Enable Authentication > Sign-in method > Email/Password.
+3. Create Firestore database in production or test mode.
+4. Copy Web App config values into `client/.env`.
+
+### Environment Variables
+
+Create `client/.env` with:
+
+```env
+VITE_DEMO_MODE=true
+
+VITE_FIREBASE_API_KEY=...
+VITE_FIREBASE_AUTH_DOMAIN=...
+VITE_FIREBASE_PROJECT_ID=...
+VITE_FIREBASE_STORAGE_BUCKET=...
+VITE_FIREBASE_MESSAGING_SENDER_ID=...
+VITE_FIREBASE_APP_ID=...
+```
+
+To run production mode instead of demo mode:
+
+```env
+VITE_DEMO_MODE=false
+```
+
+## Install and Run
 
 ```bash
-cd hostlr
+cd hostlr/client
 npm install
-cd client && npm install
-cd ../server && npm install
-```
-
-### 2. Environment Setup
-
-**Server** — Create `server/.env`:
-
-```env
-NODE_ENV=development
-PORT=5000
-MONGODB_URI=mongodb://localhost:27017/hostlr
-JWT_SECRET=your-super-secret-jwt-key-change-in-production
-JWT_EXPIRES_IN=7d
-JWT_REFRESH_EXPIRES_IN=30d
-CORS_ORIGIN=http://localhost:5173,http://localhost:3000
-```
-
-**Client** (optional) — Create `client/.env` if API is elsewhere:
-
-```env
-VITE_API_URL=http://localhost:5000/api/v1
-```
-
-### 3. Seed Admin User
-
-```bash
-cd server
-npm run seed:admin
-```
-
-Default admin: `admin@hostlr.com` / `admin123` (change in production)
-
-### 4. Run Development
-
-**Terminal 1 — Backend:**
-```bash
-cd server
 npm run dev
 ```
 
-**Terminal 2 — Frontend:**
+App URL: `http://localhost:5173`
+
+Demo login shortcuts:
+
+- Student: `bhargav@demo.com`
+- Admin: `admin@demo.com`
+- Any password works in demo mode.
+
+Production build:
+
 ```bash
-cd client
-npm run dev
-```
-
-- Frontend: http://localhost:5173
-- Backend API: http://localhost:5000/api/v1
-
-### 5. Production Build
-
-```bash
-cd client
 npm run build
 ```
 
-Serve `client/dist` with your preferred static host. Point API base URL via `VITE_API_URL` at build time.
+## Deploy on Vercel
 
-## Deployment
+This project uses a nested frontend at `hostlr/client` and React Router routes.
 
-### Backend (Server)
+Use one of these approaches:
 
-1. Set environment variables (see `server/.env.example`):
-   - `NODE_ENV=production`
-   - `MONGODB_URI` — MongoDB connection string (e.g. Atlas)
-   - `JWT_SECRET` — Strong random secret
-   - `CORS_ORIGIN` — Comma-separated list of your frontend URLs (e.g. `https://app.yourdomain.com`)
-   - Cloudinary credentials (optional, for image uploads)
+1. Deploy `hostlr` root (recommended with this repo):
+   1. Keep `hostlr/vercel.json` in place.
+   2. Vercel will run install/build inside `client` and serve `client/dist`.
+2. Deploy `hostlr/client` as Root Directory:
+   1. Set Vercel project Root Directory to `client`.
+   2. Add SPA fallback rewrite in Vercel settings (or keep equivalent `vercel.json`).
 
-2. Run behind a reverse proxy (nginx, etc.) and enable `trust proxy` (already set).
+Why this matters: without SPA fallback, direct visits to URLs like `/student/bookings` return `NOT_FOUND` because Vercel looks for a real file at that path.
 
-3. Start: `npm start` or use a process manager (PM2, systemd).
+## First Admin Bootstrap
 
-### Frontend (Client)
+Because this is frontend-only Firebase, first admin setup is manual once:
 
-1. Create `client/.env` with your API URL **before** building:
-   ```env
-   VITE_API_URL=https://api.yourdomain.com/api/v1
-   ```
+1. Create a user in Firebase Auth (email/password) from Firebase Console.
+2. In Firestore, create document in `users` collection with document id = that Auth UID.
+3. Set fields:
 
-2. Build: `npm run build`
+```json
+{
+   "name": "Admin",
+   "email": "your-admin-email",
+   "role": "admin",
+   "approvalStatus": "approved",
+   "avatarUrl": "",
+   "createdAt": "2026-01-01T00:00:00.000Z",
+   "updatedAt": "2026-01-01T00:00:00.000Z"
+}
+```
 
-3. Serve `client/dist` with nginx, Vercel, Netlify, or any static host.
+After this, admin can approve wardens and manage users from UI.
 
-### CORS
+## Firestore Collections
 
-- Add your frontend origin(s) to `CORS_ORIGIN` (no trailing slash).
-- Example: `CORS_ORIGIN=https://app.yourdomain.com,https://www.yourdomain.com`
-- Trailing slashes are normalized automatically.
+Main collections used:
 
-## API Routes
+- `users`
+- `hostels`
+- `rooms`
+- `bookings`
+- `payments`
+- `allotments`
+- `fees`
+- `complaints`
+- `leaves`
+- `visitors`
+- `announcements`
 
-| Method | Route | Description |
-|--------|-------|-------------|
-| POST | `/auth/register` | Register (warden/student) |
-| POST | `/auth/login` | Login |
-| GET | `/auth/me` | Get current user |
-| PATCH | `/auth/me` | Update profile |
-| GET | `/users` | List users (admin) |
-| GET | `/hostels` | List hostels |
-| GET | `/rooms` | List rooms |
-| GET | `/allotments` | List allotments |
-| GET | `/fees` | List fees |
-| GET | `/complaints` | List complaints |
-| GET | `/leaves` | List leave requests |
-| POST | `/leaves` | Create leave (student) |
-| PATCH | `/leaves/:id/approve` | Approve leave (admin/warden) |
-| PATCH | `/leaves/:id/reject` | Reject leave (admin/warden) |
-| GET | `/visitors` | List visitor logs |
-| POST | `/visitors` | Log visitor |
-| PATCH | `/visitors/:id/checkout` | Check out visitor (admin/warden) |
-| GET | `/announcements` | List announcements |
-| GET | `/stats` | Analytics (admin/warden/accountant) |
-| POST | `/upload` | Upload image |
+## Core Workflow Rules Implemented
 
-## Routes (Frontend)
+- Students cannot create duplicate active bookings.
+- Bed can be requested only if currently available.
+- Approval moves booking to `approved`.
+- Payment moves booking to `occupied` and `paymentStatus=paid`.
+- Payment creation also creates allotment if student has no active allotment.
+- Room bed states are derived from active bookings and allotments.
 
-| Path | Roles |
-|------|-------|
-| `/admin/*` | Admin |
-| `/warden/*` | Warden, Accountant |
-| `/student/*` | Student |
-| `/login` | Public |
-| `/register` | Public |
+## Security Notes
 
-## License
+- No hardcoded credentials are included.
+- No seeded default admin password is shipped.
+- All environment secrets are externalized via `client/.env`.
 
-MIT
+## Suggested Firestore Rules (Starter)
+
+Use role-based claims/doc checks in production. Example starter rules:
+
+```txt
+rules_version = '2';
+service cloud.firestore {
+   match /databases/{database}/documents {
+      match /users/{userId} {
+         allow read: if request.auth != null;
+         allow write: if request.auth != null && request.auth.uid == userId;
+      }
+
+      match /{document=**} {
+         allow read, write: if request.auth != null;
+      }
+   }
+}
+```
+
+Tighten these before production by enforcing role checks per collection.

@@ -30,6 +30,7 @@ export default function AdminSidebar() {
     nav('/admin/leaves', 'leaves', 'Leaves'),
     nav('/admin/visitors', 'visitors', 'Visitors'),
     nav('/admin/reports', 'reports', 'Reports'),
+    nav('/admin/bookings', 'allotments', 'Bookings'),
     nav('/admin/settings', 'settings', 'Settings'),
   ];
 

@@ -22,6 +22,7 @@ import Settings from './pages/Settings';
 import Announcements from './pages/Announcements';
 import Leaves from './pages/Leaves';
 import Visitors from './pages/Visitors';
+import Bookings from './pages/Bookings';
 
 function ProtectedRoute({ children }) {
   const { user, loading } = useAuth();
@@ -89,6 +90,7 @@ function AppRoutes() {
         <Route path="users" element={<Users />} />
         <Route path="hostels" element={<Hostels />} />
         <Route path="rooms" element={<Rooms />} />
+        <Route path="bookings" element={<Bookings />} />
         <Route path="allotments" element={<Allotments />} />
         <Route path="fees" element={<Fees />} />
         <Route path="complaints" element={<Complaints />} />
@@ -113,6 +115,7 @@ function AppRoutes() {
         <Route path="announcements" element={<Announcements />} />
         <Route path="hostels" element={<Hostels />} />
         <Route path="rooms" element={<Rooms />} />
+        <Route path="bookings" element={<Bookings />} />
         <Route path="allotments" element={<Allotments />} />
         <Route path="fees" element={<Fees />} />
         <Route path="complaints" element={<Complaints />} />
@@ -134,6 +137,7 @@ function AppRoutes() {
       >
         <Route index element={<StudentDashboard />} />
         <Route path="announcements" element={<Announcements />} />
+        <Route path="bookings" element={<Bookings />} />
         <Route path="fees" element={<Fees />} />
         <Route path="complaints" element={<Complaints />} />
         <Route path="leaves" element={<Leaves />} />

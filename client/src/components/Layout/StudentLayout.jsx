@@ -5,6 +5,7 @@ import Header from './Header';
 const titles = {
   '/student': 'Dashboard',
   '/student/announcements': 'Notices',
+  '/student/bookings': 'Bookings',
   '/student/fees': 'My Fees',
   '/student/complaints': 'My Complaints',
   '/student/leaves': 'Leave / Outpass',
@@ -23,7 +24,7 @@ export default function StudentLayout() {
       <main className="flex-1 flex flex-col min-w-0">
         <Header />
         <div className="flex-1 p-6 overflow-auto">
-          {!['/student/fees', '/student/complaints', '/student/settings', '/student/announcements', '/student/leaves', '/student/visitors'].includes(pathname) && (
+          {!['/student/fees', '/student/bookings', '/student/complaints', '/student/settings', '/student/announcements', '/student/leaves', '/student/visitors'].includes(pathname) && (
             <div className="mb-6">
               <h1 className="text-2xl font-bold text-gray-900 dark:text-slate-100">{titles[pathname] || 'Dashboard'}</h1>
               <p className="text-sm text-gray-500 dark:text-slate-400 mt-0.5">Today is {dateStr}</p>

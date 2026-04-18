@@ -1,33 +1,38 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { feesApi, complaintsApi, allotmentsApi, leavesApi } from '../services/api';
+import { feesApi, complaintsApi, allotmentsApi, leavesApi, bookingsApi } from '../services/api';
 
 export default function StudentDashboard() {
   const [fees, setFees] = useState([]);
   const [complaints, setComplaints] = useState([]);
   const [leaves, setLeaves] = useState([]);
   const [allotment, setAllotment] = useState(null);
+  const [booking, setBooking] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const load = async () => {
       try {
-        const [fRes, cRes, aRes, lRes] = await Promise.all([
+        const [fRes, cRes, aRes, lRes, bRes] = await Promise.all([
           feesApi.getAll({ limit: 5 }),
           complaintsApi.getAll({ limit: 5 }),
           allotmentsApi.getAll({ limit: 1 }),
           leavesApi.getAll({ limit: 5 }),
+          bookingsApi.getAll({ limit: 5 }),
         ]);
         setFees(fRes.data.data || []);
         setComplaints(cRes.data.data || []);
         const allotments = aRes.data.data || [];
         setAllotment(allotments[0] || null);
         setLeaves(lRes.data.data || []);
+        const bookings = bRes.data.data || [];
+        setBooking(bookings[0] || null);
       } catch {
         setFees([]);
         setComplaints([]);
         setAllotment(null);
         setLeaves([]);
+        setBooking(null);
       } finally {
         setLoading(false);
       }
@@ -77,6 +82,18 @@ export default function StudentDashboard() {
             View all →
           </Link>
         </div>
+      </div>
+
+      <div className="bg-white dark:bg-slate-800 rounded-xl shadow-sm border border-gray-100 dark:border-slate-700 p-5 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+        <div>
+          <p className="text-sm text-gray-500 dark:text-slate-400">Booking Request</p>
+          <p className="text-lg font-semibold text-gray-900 dark:text-slate-100 mt-1">
+            {booking ? `Room ${booking.roomId?.roomNumber || 'N/A'} · Bed ${booking.bedNumber} · ${booking.status}` : 'No active booking request'}
+          </p>
+        </div>
+        <Link to="/student/bookings" className="text-sm font-medium text-emerald-600 hover:text-emerald-700">
+          Manage bookings →
+        </Link>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

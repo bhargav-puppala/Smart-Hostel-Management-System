@@ -8,6 +8,7 @@ const titles = {
   '/admin/users': 'Users',
   '/admin/hostels': 'Hostels',
   '/admin/rooms': 'Rooms',
+  '/admin/bookings': 'Bookings',
   '/admin/allotments': 'Allotments',
   '/admin/fees': 'Fees',
   '/admin/complaints': 'Complaints',
@@ -28,7 +29,7 @@ export default function AdminLayout() {
       <main className="flex-1 flex flex-col min-w-0">
         <Header />
         <div className="flex-1 p-6 overflow-auto">
-          {!['/admin/complaints', '/admin/fees', '/admin/users', '/admin/allotments', '/admin/reports', '/admin/settings', '/admin/announcements', '/admin/leaves', '/admin/visitors'].includes(pathname) && (
+          {!['/admin/complaints', '/admin/fees', '/admin/users', '/admin/allotments', '/admin/bookings', '/admin/reports', '/admin/settings', '/admin/announcements', '/admin/leaves', '/admin/visitors'].includes(pathname) && (
             <div className="mb-6">
               <h1 className="text-2xl font-bold text-gray-900 dark:text-slate-100">{titles[pathname] || 'Dashboard'}</h1>
               <p className="text-sm text-gray-500 dark:text-slate-400 mt-0.5">Today is {dateStr}</p>
